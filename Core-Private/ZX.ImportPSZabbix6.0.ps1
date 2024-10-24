@@ -1,4 +1,4 @@
-$Functions = Get-ChildItem $PSScriptRoot\..\CoreFunctions | Select-Object -ExpandProperty FullName
+$Functions = Get-ChildItem $PSScriptRoot\..\Core-Public | Select-Object -ExpandProperty FullName
 
 foreach ($Function in $Functions){
     . $Function
