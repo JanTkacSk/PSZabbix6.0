@@ -66,7 +66,7 @@ function Get-ZXHost {
     }
 
     if (!$Output){
-        $Output = @("hostID","host","name","status","proxy_hostid")
+        $Output = @("hostid","host","name","status","proxy_hostid")
     }
     elseif($Output -contains "extend") {
         [string]$Output = "extend"
@@ -201,29 +201,6 @@ function Get-ZXHost {
     #Return only output count
     if($CountOutput){
         $PSObj.params | Add-Member -MemberType NoteProperty -Name "countOutput" -Value "true"
-    }
-
-    function AddObjectMemberValuesFromArray ([array]$Array, [string]$ParameterName) {
-        #This array can contain multiple properties. "Extend" property cannot be used with other properties,
-        #It has to be used alone and it has to be converted from array into a string. 
-        #Here, we are making sure that the values are converted to lowercase and that "extend" switch is not used together with other properties.
-        if ($Array -contains "Extend" -and $Array.Length -gt 1) {
-            Write-Host -ForegroundColor Red 'You cannot use "extend" with other properties.' `
-            `n'Either use specific properties without "extend" or use only "extend".' `
-            `n'Try to avoid using "extend" if you don not need all the data.'
-            continue
-        } 
-        elseif($Array -contains "Extend"){
-            $script:PSObj.params | Add-Member -MemberType NoteProperty -Name $ParemeterName -Value "extend"
-        }
-        elseif ($Array) {
-            $PSObj.params | Add-Member -MemberType NoteProperty -Name $ParameterName -Value @($Array.ToLower())
-        }
-    }
-
-    if ($SelectItems){
-        #ParemeterName must be in cammelcase because it goes to ps object which is converted into case-sensitive json api call
-        AddObjectMemberValuesFromArray -Array $SelectItems -ParameterName "selectItems"
     }
 
     #Convert the ps object to json. It is crucial to use a correct value for the -Depth
