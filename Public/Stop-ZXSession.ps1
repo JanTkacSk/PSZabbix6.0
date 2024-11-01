@@ -1,4 +1,4 @@
-function Stop-ZXLogonSession {
+function Stop-ZXSession {
     param(
         [Parameter(Mandatory=$false)]  
         [string]$UserName,
