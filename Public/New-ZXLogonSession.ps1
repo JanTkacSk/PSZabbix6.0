@@ -3,8 +3,8 @@ function New-ZXLogonSession {
         [switch]$UserData,
         [switch]$Save,
         [switch]$Load,
-        [string]$LoadUrl,
-        [string]$LoadID,
+        [string]$UserName,
+        [string]$Url, 
         [switch]$ShowJsonRequest,
         [switch]$ShowJsonResponse,
         [switch]$WhatIf,
@@ -12,9 +12,16 @@ function New-ZXLogonSession {
 
     )
 
-    if(!$RemoveAllSettings -and !$Load -and !$LoadUrl -and !$LoadID){
-        $Global:ZXAPIUrl = Read-Host -Prompt "Enter the zabbix API URL"
-        $UserName = Read-Host -Prompt "Enter the zabbix API User Name"
+    if(!$RemoveAllSettings -and !$Load){
+        if (!$Url){
+            $Global:ZXAPIUrl = Read-Host -Prompt "Enter the zabbix API URL"
+        }
+        else {
+            $Global:ZXAPIUrl = $Url
+        }
+        if (!$UserName){
+            $UserName = Read-Host -Prompt "Enter the zabbix API User Name"
+        }
         $Password = Read-Host -AsSecureString -Prompt "Enter your password"
     }
 
@@ -38,7 +45,7 @@ function New-ZXLogonSession {
         $LogonData | ConvertTo-Json | Out-File $SaveLocation -Force
     }
 
-    if($Load){
+    if($Load -and !$Url){
         $LogonData = Get-Content $SaveLocation | ConvertFrom-Json
         $LogonData | ForEach-Object {
             Write-Host -NoNewline "[$($_.Id)]"; 
@@ -52,8 +59,8 @@ function New-ZXLogonSession {
         $Global:ZXApiURL = $LogonData[$Choice].URL
     }
 
-    if($LoadUrl){
-        $LogonData = (Get-Content $SaveLocation | ConvertFrom-Json) | Where-Object {$_.URL -eq $LoadUrl}
+    if($Load -and $Url){
+        $LogonData = (Get-Content $SaveLocation | ConvertFrom-Json) | Where-Object {$_.URL -eq $Url}
         $UserName = $LogonData.UserName
         $Password = $LogonData.Password | ConvertTo-SecureString
         $Global:ZXApiURL = $LogonData.URL
