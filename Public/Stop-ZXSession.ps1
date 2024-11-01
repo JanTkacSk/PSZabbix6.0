@@ -1,12 +1,16 @@
 function Stop-ZXSession {
     param(
-        [Parameter(Mandatory=$false)]  
-        [string]$UserName,
         [switch]$ShowJsonRequest=$true,
         [switch]$ShowJsonResponse,
+        [string]$SessionID,
+        [string]$ZXAPIUrl = $ZXAPIUrl,
         [switch]$WhatIf
     )
-    
+
+    if ($null -eq $ZXAPIUrl){
+        $ZXAPIUrl = Read-Host -Prompt "Enter the zabbix API url:" 
+    }
+
     #A function that formats and displays the json request that is used in the API call, it removes the API token value and replaces it with *****
     function ShowJsonRequest {
         Write-Host -ForegroundColor Yellow "JSON REQUEST"
@@ -15,13 +19,18 @@ function Stop-ZXSession {
         $JsonShow = $PSObjShow | ConvertTo-Json -Depth 5
         Write-Host -ForegroundColor Cyan $JsonShow
     }
-    
+    if ($SessionID){     
+        $Auth = $SessionID
+    }
+    else {
+        $Auth = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR(($ZXAPIToken)));
+    }
     #Basic PS Object wich will be edited based on the used parameters and finally converted to json
     $PSObj = [PSCustomObject]@{
         "jsonrpc" = "2.0";
         "method" = "user.logout";
         "params" = @();
-        "auth" = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR(($ZXAPIToken)));
+        "auth" = "$Auth"
         "id" = "1"
 
     }
@@ -35,7 +44,6 @@ function Stop-ZXSession {
         $JsonShow = $PSObjShow | ConvertTo-Json -Depth 5
         Write-Host -ForegroundColor Cyan $JsonShow
     }
-    
     if(!$WhatIf){
         $request = Invoke-RestMethod -Uri $ZXAPIUrl -Body $Json -ContentType "application/json" -Method Post
     }
