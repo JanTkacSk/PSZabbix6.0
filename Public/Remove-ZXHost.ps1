@@ -5,12 +5,7 @@ function Remove-ZXHost{
         [switch]$ShowJsonRequest,
         [switch]$ShowJsonResponse
     )
-    #Verify parameters
-    if ($HostName -and $HostId){
-        Write-Host -ForegroundColor Yellow 'Not allowed to use -HostName and -HostID parameters together'
-        continue
-    }
-    
+   
     #Funcions
     #A function that formats and displays the json request that is used in the API call, it removes the API token value and replaces it with *****
     function ShowJsonRequest {
