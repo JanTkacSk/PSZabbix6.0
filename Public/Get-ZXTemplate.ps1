@@ -35,7 +35,7 @@ function Get-ZXTemplate {
     #A function that formats and displays the json request that is used in the API call, it removes the API token value and replaces it with *****
     function ShowJsonRequest {
         Write-Host -ForegroundColor Yellow "JSON REQUEST"
-        $PSObjShow = $PSObj
+        $PSObjShow = $PSObj | ConvertFrom-Json | ConvertTo-Json
         $PSObjShow.auth = "*****"
         $JsonShow = $PSObjShow | ConvertTo-Json -Depth 5
         Write-Host -ForegroundColor Cyan $JsonShow
@@ -87,7 +87,7 @@ function Get-ZXTemplate {
     #Show JSON Request if -ShowJsonRequest switch is used
     If ($ShowJsonRequest -or $WhatIf){
         Write-Host -ForegroundColor Yellow "JSON REQUEST"
-        $PSObjShow = $PSObj
+        $PSObjShow = $PSObj | ConvertTo-Json | ConvertFrom-Json
         $PSObjShow.auth = "*****"
         $JsonShow = $PSObjShow | ConvertTo-Json -Depth 5
         Write-Host -ForegroundColor Cyan $JsonShow
