@@ -197,6 +197,9 @@ function Get-ZXHost {
     if ($TemplateIDs) {
         $PSObj.params | Add-Member -MemberType NoteProperty -Name "templateids" -Value @($TemplateIDs)
     }
+    if ($GroupIDs) {
+        $PSObj.params | Add-Member -MemberType NoteProperty -Name "groupids" -Value @($GroupIDs)
+    }
 
     #Return only output count
     if($CountOutput){
