@@ -66,7 +66,7 @@ function Get-ZXHostGroup {
     #Show JSON Request if -ShowJsonRequest switch is used
     If ($ShowJsonRequest){
         Write-Host -ForegroundColor Yellow "JSON REQUEST"
-        $PSObjShow = $PSObj
+        $PSObjShow = $PSObj | ConvertTo-Json | ConvertFrom-Json
         $PSObjShow.auth = "*****"
         $JsonShow = $PSObjShow | ConvertTo-Json -Depth 5
         Write-Host -ForegroundColor Cyan $JsonShow
