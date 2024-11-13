@@ -82,7 +82,7 @@ function New-ZXLogonSession {
     
     if($ShowJsonRequest){
         Write-Host -ForegroundColor Yellow "JSON REQUEST"
-        $PSObjShow = $PSObject
+        $PSObjShow = $PSObject | ConvertTo-Json | ConvertFrom-Json
         $PSObjShow.params.password = "*****"
         $JsonShow = $PSObjShow | ConvertTo-Json
         Write-Host -ForegroundColor Cyan $JsonShow
