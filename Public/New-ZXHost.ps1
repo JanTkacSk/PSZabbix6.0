@@ -6,9 +6,9 @@ function New-ZXHost {
         [parameter(mandatory="true")]
         [array]$HostGroup,
         [array]$Template,
-        [array]$Tags,
-        [array]$Macros,
-        [array]$Interfaces,
+        [array]$Tag,
+        [array]$Macro,
+        [array]$Interface,
         [switch]$ShowJsonRequest,
         [switch]$WhatIf
     )
@@ -20,9 +20,6 @@ function New-ZXHost {
         "method" = "host.create";
         "params" = [PSCustomObject]@{
             "groups"=[array]$HostGroup;
-            "templates"=[array]$Template;
-            "macros"=[array]$Macros;
-            "interfaces"=[array]$Interfaces
         }; 
         #This is the same as $Global:ZXAPIToken | ConvertFrom-SecureString -AsPlainText but this worsk also for PS 5.1
         "auth" = "test" #[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR(($Global:ZXAPIToken)));
@@ -41,7 +38,19 @@ function New-ZXHost {
             Write-Host -ForegroundColor Cyan $JsonShow
         }
 
-        #Add templates to the basic PSObject
-
+        #Add Parameters based on function parameters
+        if ($Interface) {
+            $PSObj.params | Add-Member -MemberType NoteProperty -Name "interface" -Value $Interface
+        }
+        if ($Template) {
+            $PSObj.params | Add-Member -MemberType NoteProperty -Name "templates" -Value $Template
+        }
+        if ($Macro) {
+            $PSObj.params | Add-Member -MemberType NoteProperty -Name "macros" -Value $Macro
+        }
+        if ($Tag) {
+            $PSObj.params | Add-Member -MemberType NoteProperty -Name "macros" -Value $Tag
+        }
+    
 
 }
